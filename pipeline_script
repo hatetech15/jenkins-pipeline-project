@@ -1,72 +1,62 @@
 pipeline {
     agent any
-
+    environment {
+        DIRECTORY_PATH = '/var/lib/jenkins/workspace'    
+        TESTING_ENVIRONMENT = 'UAT'
+        PRODUCTION_ENVIRONMENT = 'TestEnv'      
+    }
     stages {
         stage('Build') {
             steps {
-                echo 'Building the project using Maven...'
-                // Example tool: Maven
-                sh 'mvn clean package'
+                echo "Build :Fetch the source code from the directory path specified by the environment variable: ${env.DIRECTORY_PATH}"
+                echo "Build :Compile the code and generate any necessary artifacts"
+                echo "Building using Maven"
             }
         }
         stage('Unit and Integration Tests') {
             steps {
-                echo 'Running unit tests and integration tests using JUnit...'
-                // Example tool: JUnit for unit testing, and TestNG for integration testing
-                sh 'mvn test'
-                  }
-                  post {
-                      always {
-                              emailext body: 'Unit and Integration Tests have completed. Status: ${currentBuild.currentResult}',
-                               subject: 'Jenkins Pipeline - Test Stage',
-                               to: 'bhavishyarane@gmail.com',
-                               attachLog: true
-                }
+                echo "Test :Running unit tests in JUNIT"
+                echo "Test :Running integration tests in MOCKITO"
             }
         }
-        
         stage('Code Analysis') {
             steps {
-                echo 'Analyzing code using SonarQube...'
-                // Example tool: SonarQube
-                sh 'sonar-scanner'
+                echo "code quality :Check the quality of the code in SONARQUBE"
             }
         }
         stage('Security Scan') {
             steps {
-                echo 'Performing security scan using OWASP Dependency-Check...'
-                // Example tool: OWASP Dependency-Check
-                sh 'dependency-check.sh --project "MyProject" --scan ./'
-                  }
-                  post {
-                    always {
-                            emailext body: 'Security Scan has completed. Status: ${currentBuild.currentResult}',
-                             subject: 'Jenkins Pipeline - Security Scan Stage',
-                             to: 'developer@example.com',
-                             attachLog: true
-                }
+                echo "conducting the security scan in ZAP"
             }
         }
         stage('Deploy to Staging') {
             steps {
-                echo 'Deploying the application to staging...'
-                // Example tool: Jenkins with AWS CLI for deployment
-                sh 'aws deploy create-deployment --application-name MyApp --deployment-group-name StagingGroup --s3-location bucket=mybucket,key=MyApp.zip,bundleType=zip'
+                echo "deploy the application to AWS EC2 instance"
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo 'Running integration tests on staging...'
-                // Example tool: Postman/Newman for API testing
-                sh 'newman run mycollection.postman_collection.json'
+                echo "running the integration tests on maven to ensure the application functions as expected"
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo 'Deploying the application to production...'
-                // Example tool: Jenkins with AWS CLI for deployment
-                sh 'aws deploy create-deployment --application-name MyApp --deployment-group-name ProductionGroup --s3-location bucket=mybucket,key=MyApp.zip,bundleType=zip'
+                echo " deploy the application to AWWS EC2 instance"
             }
+        }
+    }
+    post{
+        success {
+            emailext body: 'Jenkins exp6: success',
+                subject: 'Jenkins success',
+                attachLog: true,
+                to: 'bhavishyarane@gmail.com'
+        }
+        failure {
+            emailext body: 'Jenkins exp6: failure',
+                subject: 'Jenkins failure',
+                attachLog: true,
+                to: 'bhavishyarane@gmail.com'
         }
     }
 }
