@@ -54,7 +54,7 @@ pipeline {
     post {
         success {
             emailext(
-                to: 'your-email@example.com',
+                to: 'bhavishyarane@gmail.com',
                 subject: 'Jenkins Pipeline: SUCCESS',
                 body: 'The pipeline has successfully completed.',
                 attachLog: true
@@ -62,7 +62,7 @@ pipeline {
         }
         failure {
             emailext(
-                to: 'your-email@example.com',
+                to: 'bhavishyarane@gmail.com',
                 subject: 'Jenkins Pipeline: FAILURE',
                 body: 'The pipeline has failed. Please check the attached log.',
                 attachLog: true
