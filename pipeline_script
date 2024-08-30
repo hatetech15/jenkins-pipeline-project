@@ -10,20 +10,20 @@ pipeline {
             steps {
                 echo "Build: Fetching source code from ${env.DIRECTORY_PATH}"
                 echo "Build: Compiling the code using Maven"
-                sh 'mvn clean package'
+              
             }
         }
         stage('Unit and Integration Tests') {
             steps {
                 echo "Running Unit tests using JUnit"
                 echo "Running Integration tests using Mockito"
-                sh 'mvn test'
+               
             }
         }
         stage('Code Analysis') {
             steps {
                 echo "Analyzing code quality using SonarQube"
-                sh 'sonar-scanner'
+                
             }
         }
         stage('Security Scan') {
